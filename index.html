@@ -59,7 +59,11 @@
                         <p class="text-center"><b>Using AI to analyze...</b></p>
                     </div>
                     <p class="result-message"></p>
-                    <div id="label-container"></div>
+                    <img id="imageId">
+                    <div class="etsy-shop-link">
+                        <button type="button" onclick="location.href='https://www.etsy.com/shop/thekoostuff';" class="go-to-etsy">Want BTS Polaroids? Click Here!</button>
+                    </div>
+                    <div id="label-container" class="d-flex flex-column justify-content-around"></div>
                     <!-- Go to www.addthis.com/dashboard to customize your tools -->
                     <div class="addthis_inline_share_toolbox"></div>
 
@@ -113,33 +117,41 @@
                     var image = document.getElementById("face-image")
                     const prediction = await model.predict(image, false);
                     prediction.sort((a, b) => parseFloat(b.probability) - parseFloat(a.probability));
-                    var resultMessage;
+                    var resultMessage, image;
                     switch (prediction[0].className) {
                         case "RM":
-                            resultMessage = "You resemble " + prediction[0].className
+                            resultMessage = "You resemble " + prediction[0].className + "!"
+                            image = "img\\RM.png"
                             break;
                         case "V":
-                            resultMessage = "You resemble " + prediction[0].className
+                            resultMessage = "You resemble " + prediction[0].className + "!"
+                            image = "img\\v.png"
                             break;
                         case "Suga":
-                            resultMessage = "You resemble " + prediction[0].className
+                            resultMessage = "You resemble " + prediction[0].className + "!"
+                            image = "img\\suga.png"
                             break;
                         case "Jin":
-                            resultMessage = "You resemble " + prediction[0].className
+                            resultMessage = "You resemble " + prediction[0].className + "!"
+                            image = "img\\jin.png"
                             break;
                         case "Jimin":
-                            resultMessage = "You resemble " + prediction[0].className
+                            resultMessage = "You resemble " + prediction[0].className + "!"
+                            image = "img\\jimin.png"
                             break;
                         case "Jungkook":
-                            resultMessage = "You resemble " + prediction[0].className
+                            resultMessage = "You resemble " + prediction[0].className + "!"
+                            image = "img\\jungkook.png"
                             break;
                         case "J-Hope":
-                            resultMessage = "You resemble " + prediction[0].className
+                            resultMessage = "You resemble " + prediction[0].className + "!"
+                            image = "img\\j-hope.png"
                             break;
                         default:
                             resultMessage = "Could not find a match"
                     }
                     $('.result-message').html(resultMessage);
+                    document.getElementById("imageId").src = image;
                     var barWidth;
                     for (let i = 0; i < maxPredictions; i++) {
                         if (prediction[i].probability.toFixed(2) > 0.1) {
@@ -175,9 +187,9 @@
                             default:
                                 labelTitle = "Unknown"
                         }
-                        var label = "<div class='bts-label d-flex align-items-center'>" + labelTitle + "</div>"
+                        var label = "<div class='d-flex'>" + "<div class='bts-label d-flex align-items-center'>" + labelTitle + "</div>"
                         var bar = "<div class='bar-container position-relative container'><div class='" + prediction[i].className + "-box'></div><div class='d-flex justify-content-center align-items-center " + prediction[i].className + "-bar' style='width: " + barWidth + "'><span class='d-block percent-text'>" + Math.round(prediction[i].probability.toFixed(2) * 100) + "%</span></div></div>"
-                        labelContainer.childNodes[i].innerHTML = label + bar;
+                        labelContainer.childNodes[i].innerHTML = label + bar + "</div>";
                     }
                 }
             </script>
