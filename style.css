@@ -1,43 +1,98 @@
+@import url(https://fonts.googleapis.com/css?family=Open+Sans:300,400);
+html,
+body,
+h1,
+h2,
+h3,
+p {
+    margin: 0;
+    border: 0;
+    padding: 0;
+}
+
+#wrapper {
+    margin: 15px auto;
+    width: 500px;
+}
+
+h1,
+h2,
+h3 {
+    font-family: 'Open sans';
+    font-weight: 300;
+}
+
+h1 {
+    font-size: 3em;
+    line-height: 100%;
+    margin-bottom: 20px;
+}
+
+h2 {
+    font-size: 1.8em;
+    line-height: 100%;
+    padding: 20px 15px;
+}
+
+h3 {
+    font-size: 1.4em;
+    line-height: 100%;
+    padding: 15px;
+    transition: all .2s;
+}
+
+p {
+    padding: 15px;
+    line-height: 170%;
+}
+
+.box {
+    border-radius: 3px;
+    background-color: #fff;
+    border: 1px solid #ccc;
+    box-shadow: 0 0 5px #b7b7b7;
+}
+
 body {
     font-family: sans-serif;
-    background-color: #eeeeee;
+    background-color: #ffffff;
+}
+
+#main {
+    position: relative;
 }
 
 .file-upload {
     background-color: #ffffff;
-    width: 600px;
     margin: 0 auto;
-    padding: 20px;
+    padding: 10px;
 }
 
+.section {}
 
-/* BUTTON */
-
-.file-upload-btn {
-    width: 100%;
+.header {
+    text-align: center;
     margin: 0;
     color: #fff;
-    background: #1FB264;
+    background: #b980ee;
     border: none;
     padding: 10px;
-    border-radius: 4px;
-    border-bottom: 4px solid #15824B;
     transition: all .2s ease;
     outline: none;
-    text-transform: uppercase;
     font-weight: 700;
 }
 
-.file-upload-btn:hover {
-    background: #1AA059;
-    color: #ffffff;
-    transition: all .2s ease;
-    cursor: pointer;
+.title {
+    margin-bottom: 0px;
+    font-size: 30px;
+    font-weight: bold;
 }
 
-.file-upload-btn:active {
-    border: 0;
-    transition: all .2s ease;
+.subtitle {
+    padding-top: 5px;
+    text-align: center;
+    font-size: 12px;
+    font-style: italic;
 }
 
 
@@ -60,15 +115,8 @@ body {
 }
 
 .file-upload-placeholder {
-    margin-top: 20px;
-    border: 4px dashed #1FB264;
+    border: 2px dashed #b980ee;
     position: relative;
-}
-
-.image-dropping,
-.file-upload-placeholder:hover {
-    background-color: #1FB264;
-    border: 4px dashed #fff;
 }
 
 .drag-text {
@@ -76,10 +124,37 @@ body {
 }
 
 .drag-text h3 {
-    font-weight: 100;
+    font-weight: bold;
+    font-size: medium;
     text-transform: uppercase;
-    color: #15824B;
-    padding: 60px 0;
+    color: #b980ee;
+    padding: 0 0;
+}
+
+.drag-text img {
+    width: 25%;
+    height: 25%;
+}
+
+.social {
+    text-align: center;
+    font-weight: normal;
+    font-size: 15px;
+    font-style: italic;
+}
+
+.banner img {
+    width: 30px;
+    height: auto;
+}
+
+.banner a {
+    color: #b980ee;
+}
+
+.etsy img {
+    width: 100px;
+    height: auto;
 }
 
 
@@ -102,13 +177,13 @@ body {
 
 .remove-image {
     width: 200px;
-    margin: 0;
+    margin: 20px;
     color: #fff;
-    background: #cd4535;
+    background: #8A2BE2;
     border: none;
     padding: 10px;
     border-radius: 4px;
-    border-bottom: 4px solid #b02818;
+    border-bottom: 4px solid #9400D3;
     transition: all .2s ease;
     outline: none;
     text-transform: uppercase;
@@ -116,7 +191,7 @@ body {
 }
 
 .remove-image:hover {
-    background: #c13b2a;
+    background: #8A2BE2;
     color: #ffffff;
     transition: all .2s ease;
     cursor: pointer;
@@ -125,4 +200,160 @@ body {
 .remove-image:active {
     border: 0;
     transition: all .2s ease;
+}
+
+.bts-label {
+    width: 20%;
+    text-align: left;
+    height: 2rem;
+}
+
+.bar-container {
+    height: 2.7rem;
+}
+
+.RM-box {
+    position: absolute;
+    top: 0;
+    left: 0;
+    height: 2rem;
+    border-radius: 10px;
+    width: 100%;
+    background-color: rgba(117, 204, 84, 0.2);
+}
+
+.RM-bar {
+    position: absolute;
+    top: 0;
+    left: 0;
+    height: 2rem;
+    border-radius: 10px;
+    background-color: rgba(117, 204, 84, 1);
+}
+
+.V-box {
+    position: absolute;
+    top: 0;
+    left: 0;
+    height: 2rem;
+    border-radius: 10px;
+    width: 100%;
+    background-color: rgba(117, 204, 84, 0.2);
+}
+
+.V-bar {
+    position: absolute;
+    top: 0;
+    left: 0;
+    height: 2rem;
+    border-radius: 10px;
+    background-color: rgba(117, 204, 84, 1);
+}
+
+.Suga-box {
+    position: absolute;
+    top: 0;
+    left: 0;
+    height: 2rem;
+    border-radius: 10px;
+    width: 100%;
+    background-color: rgba(27, 175, 234, 0.2);
+}
+
+.Suga-bar {
+    position: absolute;
+    top: 0;
+    left: 0;
+    height: 2rem;
+    border-radius: 10px;
+    background-color: rgba(27, 175, 234, 1);
+}
+
+.Jin-box {
+    position: absolute;
+    top: 0;
+    left: 0;
+    height: 2rem;
+    border-radius: 10px;
+    width: 100%;
+    background-color: rgba(251, 176, 59, 0.2);
+}
+
+.Jin-bar {
+    position: absolute;
+    top: 0;
+    left: 0;
+    height: 2rem;
+    border-radius: 10px;
+    background-color: rgba(251, 176, 59, 1);
+}
+
+.Jimin-box {
+    position: absolute;
+    top: 0;
+    left: 0;
+    height: 2rem;
+    border-radius: 10px;
+    width: 100%;
+    background-color: rgba(195, 140, 102, 0.2);
+}
+
+.Jimin-bar {
+    position: absolute;
+    top: 0;
+    left: 0;
+    height: 2rem;
+    border-radius: 10px;
+    background-color: rgba(195, 140, 102, 1);
+}
+
+.Jungkook-box {
+    position: absolute;
+    top: 0;
+    left: 0;
+    height: 2rem;
+    border-radius: 10px;
+    width: 100%;
+    background-color: rgba(49, 132, 155, 0.2);
+}
+
+.Jungkook-bar {
+    position: absolute;
+    top: 0;
+    left: 0;
+    height: 2rem;
+    border-radius: 10px;
+    background-color: rgba(49, 132, 155, 1);
+}
+
+.J-Hope-box {
+    position: absolute;
+    top: 0;
+    left: 0;
+    height: 2rem;
+    border-radius: 10px;
+    width: 100%;
+    background-color: rgba(235, 166, 190, 0.2);
+}
+
+.J-Hope-bar {
+    position: absolute;
+    top: 0;
+    left: 0;
+    height: 2rem;
+    border-radius: 10px;
+    background-color: rgba(235, 166, 190, 1);
+}
+
+
+/* On screens that are 600px or less */
+
+@media screen and (max-width: 600px) {
+    html {
+        font-size: 10px;
+    }
+    #wrapper {
+        margin: 15px auto;
+        width: 300px;
+    }
 }

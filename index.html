@@ -2,109 +2,262 @@
 <html>
 
 <head>
+    <!-- Required meta tags -->
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+    <!-- Bootstrap CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-beta1/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-giJF6kkoqNQ00vy+HMDP7azOuL0xtbfIcaT9wjKHr8RbDVddVHyTfAAsrekwKmP1" crossorigin="anonymous">
+    <title>BTS Look-Alike</title>
     <link rel="stylesheet" href="style.css">
+    <!-- Go to www.addthis.com/dashboard to customize your tools -->
+    <script type="text/javascript" src="//s7.addthis.com/js/300/addthis_widget.js#pubid=ra-60170ef2cfc9825d"></script>
+    <link rel="shortcut icon" href="/favicon.ico" type="image/x-icon">
+    <link rel="icon" href="/favicon.ico" type="image/x-icon">
 </head>
 
 <body>
-    <div>Teachable Machine Image Model</div>
-    <button type="button" onclick="init()">Start</button>
-    <button type="button" onclick="predict()">Match</button>
     <script class="jsbin" src="https://ajax.googleapis.com/ajax/libs/jquery/1/jquery.min.js"></script>
-    <div class="file-upload">
 
-        <button class="file-upload-btn" type="button" onclick="$('.file-upload-input').trigger( 'click' )">Add Image</button>
-        <div class="file-upload-placeholder">
-            <input class="file-upload-input" type='file' onchange="readURL(this);" accept="image/*" />
-            <div class="drag-text">
-                <h3>Drag and drop a file or select add Image</h3>
+    <div id="wrapper">
+        <div class="box">
+            <section class="section">
+                <div class="header d-flex justify-content-center">
+                    <div class="justify-content-center">
+                        <h1 class="title">BTS LOOK-ALIKE</h1>
+                        <h2 class="subtitle">which BTS member do you resemble?</h2>
+                        <div class="banner align-self-center">
+                            <div class="social">
+                                sponsored by thekoostuff
+                                <a href="https://www.tiktok.com/@thekoostuff">
+                                    <img src="img/tiktok-icon.png" alt="" class="tiktok-icon">
+                                </a>
+                                <a href="https://www.instagram.com/thekoostuff">
+                                    <img src="img/instagram-icon.png" alt="" class="instagram-icon">
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <div class="file-upload">
+                <div class="file-upload-placeholder">
+                    <input class="file-upload-input" type='file' onchange="readURL(this);" accept="image/*" />
+                    <div class="drag-text">
+                        <img src="img/upload.jpg" alt="" class="upload-icon">
+                        <h3>Tap Here to Upload a Photo</h3>
+                    </div>
+                </div>
+
+                <div class="file-upload-preview">
+                    <img class="file-upload-image" id="face-image" src="#" alt="your image" />
+                    <div id="loading" class="animated bounce">
+                        <div class="spinner-border" role="status">
+                            <span class="sr-only"></span>
+                        </div>
+                        <p class="text-center"><b>Using AI to analyze...</b></p>
+                    </div>
+                    <p class="result-message"></p>
+                    <div id="label-container"></div>
+                    <!-- Go to www.addthis.com/dashboard to customize your tools -->
+                    <div class="addthis_inline_share_toolbox"></div>
+
+                    <div class="file-upload-remove">
+                        <button type="button" onclick="removeUpload()" class="remove-image">RETRY</button>
+                    </div>
+                </div>
             </div>
-        </div>
 
-        <div class="file-upload-preview">
-            <img class="file-upload-image" id="face-image" src="#" alt="your image" />
-            <div class="file-upload-remove">
-                <button type="button" onclick="removeUpload()" class="remove-image">Remove <span class="image-title">Uploaded
-                            Image</span></button>
+            <div class="etsy align-self-center">
+                <h3 class="social">Checkout BTS polaroids on Etsy!</h3>
+                <a href="https://www.instagram.com/thekoostuff">
+                    <img src="img/etsy-icon.png" alt="" class="etsy-icon">
+                </a>
+                <h3 class="social">Click Here!</h3>
             </div>
-        </div>
 
+
+            <div id="webcam-container"></div>
+            <script src="https://cdn.jsdelivr.net/npm/@tensorflow/tfjs@1.3.1/dist/tf.min.js"></script>
+            <script src="https://cdn.jsdelivr.net/npm/@teachablemachine/image@0.8/dist/teachablemachine-image.min.js"></script>
+            <script type="text/javascript">
+                // More API functions here:
+                // https://github.com/googlecreativelab/teachablemachine-community/tree/master/libraries/image
+
+                // the link to your model provided by Teachable Machine export panel
+                const URL = "https://teachablemachine.withgoogle.com/models/6XG8W0iit/";
+
+                let model, webcam, labelContainer, maxPredictions;
+
+                // Load the image model and setup the webcam
+                async function init() {
+                    const modelURL = URL + "model.json";
+                    const metadataURL = URL + "metadata.json";
+
+                    // load the model and metadata
+                    // Refer to tmImage.loadFromFiles() in the API to support files from a file picker
+                    // or files from your local hard drive
+                    // Note: the pose library adds "tmImage" object to your window (window.tmImage)
+                    model = await tmImage.load(modelURL, metadataURL);
+                    maxPredictions = model.getTotalClasses();
+                    labelContainer = document.getElementById("label-container");
+                    for (let i = 0; i < maxPredictions; i++) { // and class labels
+                        labelContainer.appendChild(document.createElement("div"));
+                    }
+                }
+
+                // run the webcam image through the image model
+                async function predict() {
+                    // predict can take in an image, video or canvas html element
+                    var image = document.getElementById("face-image")
+                    const prediction = await model.predict(image, false);
+                    prediction.sort((a, b) => parseFloat(b.probability) - parseFloat(a.probability));
+                    var resultMessage;
+                    switch (prediction[0].className) {
+                        case "RM":
+                            resultMessage = "You resemble " + prediction[0].className
+                            break;
+                        case "V":
+                            resultMessage = "You resemble " + prediction[0].className
+                            break;
+                        case "Suga":
+                            resultMessage = "You resemble " + prediction[0].className
+                            break;
+                        case "Jin":
+                            resultMessage = "You resemble " + prediction[0].className
+                            break;
+                        case "Jimin":
+                            resultMessage = "You resemble " + prediction[0].className
+                            break;
+                        case "Jungkook":
+                            resultMessage = "You resemble " + prediction[0].className
+                            break;
+                        case "J-Hope":
+                            resultMessage = "You resemble " + prediction[0].className
+                            break;
+                        default:
+                            resultMessage = "Could not find a match"
+                    }
+                    $('.result-message').html(resultMessage);
+                    var barWidth;
+                    for (let i = 0; i < maxPredictions; i++) {
+                        if (prediction[i].probability.toFixed(2) > 0.1) {
+                            barWidth = Math.round(prediction[i].probability.toFixed(2) * 100) + "%";
+                        } else if (prediction[i].probability.toFixed(2) >= 0.01) {
+                            barWidth = "4%"
+                        } else {
+                            barWidth = "2%"
+                        }
+                        var labelTitle;
+                        switch (prediction[i].className) {
+                            case "RM":
+                                labelTitle = "RM"
+                                break;
+                            case "V":
+                                labelTitle = "V"
+                                break;
+                            case "Suga":
+                                labelTitle = "Suga"
+                                break;
+                            case "Jin":
+                                labelTitle = "Jin"
+                                break;
+                            case "Jimin":
+                                labelTitle = "Jimin"
+                                break;
+                            case "Jungkook":
+                                labelTitle = "Jungkook"
+                                break;
+                            case "J-Hope":
+                                labelTitle = "J-Hope"
+                                break;
+                            default:
+                                labelTitle = "Unknown"
+                        }
+                        var label = "<div class='bts-label d-flex align-items-center'>" + labelTitle + "</div>"
+                        var bar = "<div class='bar-container position-relative container'><div class='" + prediction[i].className + "-box'></div><div class='d-flex justify-content-center align-items-center " + prediction[i].className + "-bar' style='width: " + barWidth + "'><span class='d-block percent-text'>" + Math.round(prediction[i].probability.toFixed(2) * 100) + "%</span></div></div>"
+                        labelContainer.childNodes[i].innerHTML = label + bar;
+                    }
+                }
+            </script>
+            <script>
+                function readURL(input) {
+                    if (input.files && input.files[0]) { // if input is file, files has content
+                        var inputFileData = input.files[0]; // shortcut
+                        var reader = new FileReader(); // FileReader() : init
+                        reader.onload = function(e) { /* FileReader : set up ************** */
+                            console.log('e', e)
+                            $('#loading').show();
+                            $('.file-upload-placeholder').hide(); // call for action element : hide
+                            $('.file-upload-image').attr('src', e.target.result); // image element : set src data.
+                            $('.file-upload-preview').show(); // image element's container : show
+                            $('.image-title').html(inputFileData.name); // set image's title
+                        };
+                        console.log('input.files[0]', input.files[0])
+                        reader.readAsDataURL(inputFileData); // reads target inputFileData, launch `.onload` actions
+                        init().then(() => {
+                            predict();
+                            $('#loading').hide();
+                        });
+                    } else {
+                        removeUpload();
+                    }
+                }
+
+                function removeUpload() {
+                    var $clone = $('.file-upload-input').val('').clone(true); // create empty clone
+                    $('.file-upload-input').replaceWith($clone); // reset input: replaced by empty clone
+                    $('.file-upload-placeholder').show(); // show placeholder
+                    $('.file-upload-preview').hide(); // hide preview
+                }
+
+                // Style when drag-over
+                $('.file-upload-placeholder').bind('dragover', function() {
+                    $('.file-upload-placeholder').addClass('image-dropping');
+                });
+                $('.file-upload-placeholder').bind('dragleave', function() {
+                    $('.file-upload-placeholder').removeClass('image-dropping');
+                });
+            </script>
+            <!-- Optional JavaScript; choose one of the two! -->
+
+            <!-- Option 1: Bootstrap Bundle with Popper -->
+            <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-beta1/dist/js/bootstrap.bundle.min.js" integrity="sha384-ygbV9kiqUc6oa4msXn9868pTtWMgiQaeYH7/t7LECLbyPA2x65Kgf80OJFdroafW" crossorigin="anonymous"></script>
+
+            <!-- Option 2: Separate Popper and Bootstrap JS -->
+            <!--
+    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.5.4/dist/umd/popper.min.js" integrity="sha384-q2kxQ16AaE6UbzuKqyBE9/u/KzioAlnx2maXQHiDX9d4/zp8Ok3f+M7DPm+Ib6IU" crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-beta1/dist/js/bootstrap.min.js" integrity="sha384-pQQkAEnwaBkjpqZ8RU1fF1AKtTcHJwFl3pblpTlHXybJjHpMYo79HY3hIi4NKxyj" crossorigin="anonymous"></script>
+    -->
+            <script>
+                $(document).ready(function() {
+                    $('h3').addClass('loading');
+                });
+            </script>
+
+        </div>
     </div>
-    <div id="webcam-container"></div>
-    <div id="label-container"></div>
-    <script src="https://cdn.jsdelivr.net/npm/@tensorflow/tfjs@1.3.1/dist/tf.min.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/@teachablemachine/image@0.8/dist/teachablemachine-image.min.js"></script>
-    <script type="text/javascript">
-        // More API functions here:
-        // https://github.com/googlecreativelab/teachablemachine-community/tree/master/libraries/image
-
-        // the link to your model provided by Teachable Machine export panel
-        const URL = "https://teachablemachine.withgoogle.com/models/6XG8W0iit/";
-
-        let model, webcam, labelContainer, maxPredictions;
-
-        // Load the image model and setup the webcam
-        async function init() {
-            const modelURL = URL + "model.json";
-            const metadataURL = URL + "metadata.json";
-
-            // load the model and metadata
-            // Refer to tmImage.loadFromFiles() in the API to support files from a file picker
-            // or files from your local hard drive
-            // Note: the pose library adds "tmImage" object to your window (window.tmImage)
-            model = await tmImage.load(modelURL, metadataURL);
-            maxPredictions = model.getTotalClasses();
-            labelContainer = document.getElementById("label-container");
-            for (let i = 0; i < maxPredictions; i++) { // and class labels
-                labelContainer.appendChild(document.createElement("div"));
-            }
-        }
-
-        // run the webcam image through the image model
-        async function predict() {
-            // predict can take in an image, video or canvas html element
-            var image = document.getElementById("face-image")
-            const prediction = await model.predict(image, false);
-            for (let i = 0; i < maxPredictions; i++) {
-                const classPrediction =
-                    prediction[i].className + ": " + prediction[i].probability.toFixed(2);
-                labelContainer.childNodes[i].innerHTML = classPrediction;
-            }
-        }
-    </script>
+    <div id="disqus_thread"></div>
     <script>
-        function readURL(input) {
-            if (input.files && input.files[0]) { // if input is file, files has content
-                var inputFileData = input.files[0]; // shortcut
-                var reader = new FileReader(); // FileReader() : init
-                reader.onload = function(e) { /* FileReader : set up ************** */
-                    console.log('e', e)
-                    $('.file-upload-placeholder').hide(); // call for action element : hide
-                    $('.file-upload-image').attr('src', e.target.result); // image element : set src data.
-                    $('.file-upload-preview').show(); // image element's container : show
-                    $('.image-title').html(inputFileData.name); // set image's title
-                };
-                console.log('input.files[0]', input.files[0])
-                reader.readAsDataURL(inputFileData); // reads target inputFileData, launch `.onload` actions
-            } else {
-                removeUpload();
-            }
-        }
-
-        function removeUpload() {
-            var $clone = $('.file-upload-input').val('').clone(true); // create empty clone
-            $('.file-upload-input').replaceWith($clone); // reset input: replaced by empty clone
-            $('.file-upload-placeholder').show(); // show placeholder
-            $('.file-upload-preview').hide(); // hide preview
-        }
-
-        // Style when drag-over
-        $('.file-upload-placeholder').bind('dragover', function() {
-            $('.file-upload-placeholder').addClass('image-dropping');
-        });
-        $('.file-upload-placeholder').bind('dragleave', function() {
-            $('.file-upload-placeholder').removeClass('image-dropping');
-        });
-    </script>>
+        /**
+         *  RECOMMENDED CONFIGURATION VARIABLES: EDIT AND UNCOMMENT THE SECTION BELOW TO INSERT DYNAMIC VALUES FROM YOUR PLATFORM OR CMS.
+         *  LEARN WHY DEFINING THESE VARIABLES IS IMPORTANT: https://disqus.com/admin/universalcode/#configuration-variables    */
+        /*
+        var disqus_config = function () {
+        this.page.url = PAGE_URL;  // Replace PAGE_URL with your page's canonical URL variable
+        this.page.identifier = PAGE_IDENTIFIER; // Replace PAGE_IDENTIFIER with your page's unique identifier variable
+        };
+        */
+        (function() { // DON'T EDIT BELOW THIS LINE
+            var d = document,
+                s = d.createElement('script');
+            s.src = 'https://thekoostuff.disqus.com/embed.js';
+            s.setAttribute('data-timestamp', +new Date());
+            (d.head || d.body).appendChild(s);
+        })();
+    </script>
+    <noscript>Please enable JavaScript to view the <a href="https://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
 </body>
 <!--     
     Copyright (c) 2021 by Lopez Hugo (https://codepen.io/hugolpz/pen/RwagbKy)
